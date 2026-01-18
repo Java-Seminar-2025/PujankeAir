@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_ROOT_PASSWORD: MyPassword1@
+      MYSQL_DATABASE: PujankeAir
+      MYSQL_USER: PujankeAir
+      MYSQL_PASSWORD: MyPassword1@
+    ports:
+      - '3307:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./dbinit/DB_Create.sql:/docker-entrypoint-initdb.d/DB_Create.sql:ro
+    container_name: mysql
+    hostname: mysql
+    healthcheck:
+        test: ["CMD-SHELL", "mysqladmin ping -h localhost -u PujankeAir -pMyPassword1@ --silent"]
+        interval: 10s
+        timeout: 10s
+        start_period: 20s
+        retries: 5
+
+volumes:
+  db:
