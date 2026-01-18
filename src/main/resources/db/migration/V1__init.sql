@@ -18,9 +18,12 @@ CREATE TABLE IF NOT EXISTS Aircraft (
 	aircraft_id INT AUTO_INCREMENT PRIMARY KEY,
 	manufacturer VARCHAR(20) DEFAULT 'undefined',
 	model VARCHAR(10) DEFAULT 'undefined',
-	serial_number VARCHAR(10) NOT NULL,
+	serial_number VARCHAR(10) UNIQUE NOT NULL,
 	seat_rows INT NOT NULL,
-	seat_columns INT NOT NULL
+	seat_columns INT NOT NULL,
+	
+	CONSTRAINT chk_pos_counts
+	CHECK(seat_rows > 0 AND seat_columns > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Service (
@@ -40,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Pilot (
 
 CREATE TABLE IF NOT EXISTS Airport (
 	airport_id INT AUTO_INCREMENT PRIMARY KEY,
-	airport_name VARCHAR(40) NOT NULL,
+	airport_name VARCHAR(40) NOT NULL,	
 	icao_code CHAR(4) UNIQUE NOT NULL,
 	country VARCHAR(20) NOT NULL,
 	city VARCHAR(20) NOT NULL
@@ -62,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Notification (
 
 CREATE TABLE IF NOT EXISTS `Order` (
 	order_id INT AUTO_INCREMENT PRIMARY KEY,
-	order_uuid INT DEFAULT (UUID()),
+	order_uuid BINARY(16) DEFAULT (UUID()),
 	`user_id` INT,
 	total_price DECIMAL(10,2) DEFAULT 0.0,
 	order_finalized BOOL DEFAULT FALSE,
