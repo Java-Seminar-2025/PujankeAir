@@ -1,0 +1,16 @@
+#navbar-list * {
+    font-size: large;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+}
+
+#navbar {
+    background-color: blue;
+}
+
+#navbar h1 {
+    font-family: 'Josefin Sans', sans-serif;
+    color: white;
+    font-weight: 900;
+    font-size: 4em
+}

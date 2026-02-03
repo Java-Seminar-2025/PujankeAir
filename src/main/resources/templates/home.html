@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <h1 class="text-center mb-4">Welcome to PujankeAir!</h1>
+            <p class="text-center mb-5">We pride ourselves on our affordable flight arrangements and our vast coverage, we hope we may be of service to you.</p>
+        </div>
+    </div>
+</div>
+
+<div class="text-center my-5 py-5">
+    <img th:src="@{/img/plane.png}" alt="PujankeAir Aircraft" class="img-fluid" style="max-width: 600px;">
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <h2 class="text-center mt-5 mb-3">Let's get started</h2>
+            <p class="mb-5">
+                To search for flights and reserve them, go to 'FLIGHTS'. 'MY BOOKINGS' is where your reserved and paid-for flights reside.
+                To learn more about us, go to 'ABOUT US'. To set up/manage your account, click on your username on the navbar.
+                If you're not already logged in, you can do so by clicking on 'LOG IN' on the navbar (note: this is necessary to use the booking system).
+            </p>
+
+            <h2 class="text-center mt-5 mb-3">Policies</h2>
+            <p class="mb-5 text-center">For a brief overview of our user policies, please go to the 'ABOUT US' page.</p>
+
+            <h2 class="text-center mt-5 mb-4">Have a nice day!</h2>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav th:fragment="navbar" id="navbar" class="d-flex flex-column sticky-top navbar navbar-expand-lg navbar-primary my-0 py-0 pt-3">
+    <h1 class="w-100 text-center pt-3">PujankeAir</h1>
+    <hr class="color-white">
+    <div class="bg-primary w-100 d-flex justify-content-center py-1">
+        <ul id="navbar-list" type="none" class="w-75 bg-primary d-flex justify-content-evenly px-5 my-0 py-0">
+            <li><a th:href="@{/home}" class="btn btn-primary">HOME</a></li>
+            <li><a th:href="@{/search}" class="btn btn-primary">FLIGHTS</a></li>
+            <li><a th:href="@{/bookings}" class="btn btn-primary">MY BOOKINGS</a></li>
+            <li><a th:href="@{/about-us}" class="btn btn-primary">ABOUT US</a></li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/account}" class="btn btn-primary" th:text="${#strings.capitalize(#authentication.name)}"></a></li>
+            <li sec:authorize="isAnonymous()"><a th:href="@{/login}" class="btn btn-primary">LOG IN</a></li>
+            <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/home}" class="btn btn-primary">ADMINISTRATION</a></li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
