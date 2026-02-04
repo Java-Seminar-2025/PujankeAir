@@ -31,15 +31,10 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage(@RequestParam(required = false) Boolean error, Principal principal) {
+    public String getLoginPage(Principal principal) {
         if (principal != null)
             return "redirect:/home";
 
         return "login";
-    }
-
-    @GetMapping("/home")
-    public String getHomePage() {
-        return "home";
     }
 }

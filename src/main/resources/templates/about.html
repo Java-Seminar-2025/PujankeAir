@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir - about us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+
+<div class="abt-container w-75 d-flex mx-auto justify-content-center flex-column gap-5 py-5">
+    <div class="abt-block w-75 mx-auto d-flex flex-column gap-3">
+        <h2 class="text-center">Who are we and what do we do?</h2>
+        <p class="text-left">
+            We are a multinational airline company headquartered in the city of Split, specifically the Pujanke district.
+            We specialize in inexpensive travel, specifically between countries belonging to the Schengen Area.
+        </p>
+        <img th:src="@{/img/location.png}" class="w-75 mx-auto" alt="our location" title="location">
+    </div>
+
+    <div class="abt-block w-75 mx-auto d-flex flex-column gap-3">
+        <h2 class="text-center">Why use us?</h2>
+        <p class="text-left">
+            We offer some of the cheapest flights in the European Union, with a focus on punctuality and safety.
+            Since our founding we haven't had a single flight-related accident, nor customer complaint about comfort.
+            Our flights are never delayed or canceled, we have never had late arrivals. Our staff are trained professionals
+            who will gladly assist you with anything to ensure you have a comfortable flight.
+        </p>
+    </div>
+
+    <div class="abt-block w-75 mx-auto d-flex flex-column gap-3">
+        <h2 class="text-center">What is our scope of operations?</h2>
+        <p class="text-left">
+            Currently we only offer domestic flights between countries inside the European Union, or more specifically, belonging
+            to the Schengen Area. However, we plan to expand our operations to all European countries in the near future.
+            We also plan to introduce a few intercontinental flights, namely between Europe and the US, but this is still
+            only in the planning phase.
+        </p>
+    </div>
+
+    <div class="abt-block w-75 mx-auto d-flex flex-column gap-3">
+        <h2 class="text-center">What is our refund policy?</h2>
+        <p class="text-left">
+            We offer 50% refunds on all flights up to 72 hours before departure.
+            This includes any amenities purchased alongside the flight
+        </p>
+    </div>
+
+    <div class="abt-block w-75 mx-auto d-flex flex-column gap-3">
+        <h2 class="text-center">Contact us</h2>
+        <p class="text-left">
+            If you have any questions about our booking process, feel free to reach out to us: <br>
+            E-Mail: <a href="mailto:info@pujankeair.com">info@pujankeair.com</a> <br>
+            Phone: +385 92 123 4567 <br>
+            Fax: +385 92 123 4568 <br>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

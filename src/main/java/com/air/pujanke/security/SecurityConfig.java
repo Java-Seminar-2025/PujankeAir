@@ -31,7 +31,9 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/login","/register", "/home", "/search", "/css/**", "/js/**", "/api/**", "/img/**").permitAll()
+                .requestMatchers("/register", "/login").permitAll()
+                .requestMatchers("/home", "/about-us", "/search").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/api/**", "/img/**").permitAll()
                 .anyRequest().authenticated()
         ).formLogin((httpSec) -> httpSec
                 .loginPage("/login")

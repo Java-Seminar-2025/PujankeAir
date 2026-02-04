@@ -1,6 +1,6 @@
 USE PujankeAir;
 
 INSERT INTO `User`
-(username, password_hash, admin_privileges)
+(username, password_hash, admin_privileges, enabled)
 VALUES
-('admin', '$2a$10$ncuA8Wjak88odZDx5PFpOOtyj1CoaVJWW8KBvfNI8SNnWy3j0UJCu', TRUE)
+('admin', '$2a$10$ncuA8Wjak88odZDx5PFpOOtyj1CoaVJWW8KBvfNI8SNnWy3j0UJCu', TRUE, TRUE)
