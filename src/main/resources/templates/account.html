@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir - your account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+
+<div class="container my-5 mx-auto w-50 d-flex flex-column gap-5 justify-content-center">
+    <p class="p-2 text-center" th:text="|Username: ${account.username}|"></p>
+    <p class="p-2 text-center" th:text="|Account created at: ${account.registrationTimestamp}|"></p>
+    <p class="p-2 text-center" th:text="|Current balance: ${account.funds}|"></p>
+    <form th:action="@{/account/add-funds}" method="post" class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-primary w-25">Add funds</button>
+    </form>
+    <form th:action="@{/logout}" method="post" class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-primary w-25">Log out</button>
+    </form>
+    <form th:action="@{/account/change-password}" method="post" class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-primary w-25">Change password</button>
+    </form>
+    <form th:action="@{/account/delete-confirmation}" method="post" class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-danger w-25">Delete account</button>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

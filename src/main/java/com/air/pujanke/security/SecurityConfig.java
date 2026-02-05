@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,7 +30,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http, SessionRegistry sessionRegistry) {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/register", "/login").permitAll()
@@ -44,6 +51,10 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
         ).exceptionHandling((httpSec) -> httpSec
                 .accessDeniedPage("/home?unauthorized=true")
+        ).sessionManagement((sm) -> sm
+                .maximumSessions(1)
+                .expiredUrl("/login?expired")
+                .sessionRegistry(sessionRegistry)
         );
         return http.build();
     }

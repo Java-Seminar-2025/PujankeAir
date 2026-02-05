@@ -1,20 +1,18 @@
 package com.air.pujanke.controller;
 
 import com.air.pujanke.model.dto.UserRegistrationDto;
-import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.service.UserService;
 import jakarta.validation.Valid;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
 @Controller
-@Data
+@RequiredArgsConstructor
 public class AuthenticationController {
 
     private final UserService userService;
