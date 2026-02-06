@@ -10,7 +10,7 @@
             <li><a th:href="@{/search}" class="btn btn-primary">FLIGHTS</a></li>
             <li><a th:href="@{/bookings}" class="btn btn-primary">MY BOOKINGS</a></li>
             <li><a th:href="@{/about-us}" class="btn btn-primary">ABOUT US</a></li>
-            <li sec:authorize="isAuthenticated()"><a th:href="@{/account}" class="btn btn-primary" th:text="${#strings.capitalize(#authentication.name)}"></a></li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/account}" class="btn btn-primary" th:text="${#strings.toUpperCase(#authentication.name)}"></a></li>
             <li sec:authorize="isAnonymous()"><a th:href="@{/login}" class="btn btn-primary">LOG IN</a></li>
             <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/home}" class="btn btn-primary">ADMINISTRATION</a></li>
         </ul>

@@ -1,10 +1,7 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.UserNotFoundException;
-import com.air.pujanke.model.dto.UserAccountPageDetailsDto;
-import com.air.pujanke.model.dto.UserFundModificationDto;
-import com.air.pujanke.model.dto.UserPasswordResetDto;
-import com.air.pujanke.model.dto.UserRegistrationDto;
+import com.air.pujanke.model.dto.*;
 import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
 import com.air.pujanke.utility.ConfiguredObjectMapper;
@@ -61,5 +58,12 @@ public class UserService {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
         userAccountOpValidator.validatePasswordReset(user, passwordResetDto);
         user.setPasswordHash(passwordEncoder.encode(passwordResetDto.newPassword()));
+    }
+
+    @Transactional
+    public void deleteAccount(@NonNull String username, UserAccountDeletionDto deletionDto) {
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        userAccountOpValidator.validateAccountDeletion(user, deletionDto);
+        userRepository.delete(user);
     }
 }

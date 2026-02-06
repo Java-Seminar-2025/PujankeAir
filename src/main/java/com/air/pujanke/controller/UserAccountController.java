@@ -1,16 +1,18 @@
 package com.air.pujanke.controller;
 
+import com.air.pujanke.model.dto.UserAccountDeletionDto;
 import com.air.pujanke.model.dto.UserFundModificationDto;
 import com.air.pujanke.model.dto.UserPasswordResetDto;
 import com.air.pujanke.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -21,6 +23,7 @@ import java.security.Principal;
 public class UserAccountController {
 
     private final UserService userService;
+    private final SecurityContextLogoutHandler logoutHandler;
 
     @GetMapping
     public String getAccountPage(Principal userPrincipal, Model model) {
@@ -41,10 +44,26 @@ public class UserAccountController {
     }
 
     @PatchMapping("/reset-password")
-    public String resetPassword(Principal userPrincipal, @ModelAttribute("passwordResetDto") UserPasswordResetDto passwordResetDto,
+    public String resetPassword(Principal userPrincipal, @ModelAttribute("passwordResetDto") @Valid UserPasswordResetDto passwordResetDto,
                                 RedirectAttributes ra) {
         userService.resetPassword(userPrincipal.getName(), passwordResetDto);
         ra.addFlashAttribute("success", "Password reset successfully.");
         return "redirect:/account";
+    }
+
+    @GetMapping("/delete")
+    public String getDeleteAccountPage() {
+        return "delete_account";
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteAccount(@ModelAttribute("accountDeletionDto") @Valid UserAccountDeletionDto accountDeletionDto,
+                                HttpServletRequest httpRequest,
+                                HttpServletResponse httpResponse,
+                                Principal userPrincipal) {
+
+        userService.deleteAccount(userPrincipal.getName(), accountDeletionDto);
+        logoutHandler.logout(httpRequest, httpResponse, SecurityContextHolder.getContext().getAuthentication());
+        return "redirect:/home";
     }
 }

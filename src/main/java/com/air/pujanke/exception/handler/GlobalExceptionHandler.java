@@ -23,4 +23,10 @@ public class GlobalExceptionHandler {
         return "redirect:" + request.getRequestURI();
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public String handleOtherExceptions(RedirectAttributes ra, HttpServletRequest request) {
+        ra.addFlashAttribute("error", "An unexpected error occurred.");
+        return "redirect:" + request.getRequestURI();
+    }
+
 }

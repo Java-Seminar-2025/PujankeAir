@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private final UserRepository userRepository;
 
     @Override

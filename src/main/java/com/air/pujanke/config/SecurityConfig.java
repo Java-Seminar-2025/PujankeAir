@@ -12,13 +12,14 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
     private final SecurityUserDetailsService userDetailsService;
 
     @Bean
@@ -49,7 +50,7 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
         ).exceptionHandling((httpSec) -> httpSec
-                .accessDeniedPage("/home?unauthorized=true")
+                .accessDeniedPage("/home?unauthorized")
         ).sessionManagement((sm) -> sm
                 .maximumSessions(1)
                 .expiredUrl("/login?expired")
@@ -61,5 +62,13 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    SecurityContextLogoutHandler getLogoutHandler() {
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.setInvalidateHttpSession(true);
+        logoutHandler.setClearAuthentication(true);
+        return logoutHandler;
     }
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir - delete account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/text_style.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+<th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
+
+<main class="py-4 w-100 px-5 d-flex justify-content-center">
+    <form class="w-25 d-flex flex-column gap-4 px-5 pt-5" method="post" th:action=@{/account/delete}>
+        <input type="hidden" name="_method" value="delete"/>
+        <h4 class="text-center" style="color:red">
+            Warning: This action cannot be undone, are you sure you want to delete your account?
+        </h4>
+        <div class="form-group">
+            <label for="currPassword">Your password</label>
+            <input maxlength="255" type="password" class="form-control" id="currPassword" name="password" placeholder="Enter your password." required>
+        </div>
+        <button type="submit" class="btn btn-danger w-50 align-self-center">I'm sure</button>
+    </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
