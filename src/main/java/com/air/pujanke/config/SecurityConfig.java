@@ -1,6 +1,5 @@
-package com.air.pujanke.security;
+package com.air.pujanke.config;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

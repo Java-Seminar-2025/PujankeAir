@@ -1,6 +1,5 @@
-package com.air.pujanke.security;
+package com.air.pujanke.config;
 
-import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

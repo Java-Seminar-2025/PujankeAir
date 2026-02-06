@@ -1,0 +1,9 @@
+.account-actions {
+    width: 100%;
+    max-width: 520px;
+}
+
+.account-actions .btn {
+    min-width: 220px;
+    white-space: nowrap;
+}
