@@ -37,7 +37,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, SessionRegistry sessionRegistry) {
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/admin/**", "/admin").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/register", "/login").permitAll()
                 .requestMatchers("/home", "/about-us", "/search").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/api/**", "/img/**").permitAll()

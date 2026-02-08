@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Airport")
+@Table(name = "`Airport`")
 public class AirportEntity {
 
     @Id
@@ -20,12 +20,10 @@ public class AirportEntity {
     @Column(name = "airport_name", length = 40, nullable = false)
     private String airportName;
 
-    @Column(name = "icao_code", length = 4, nullable = false, unique = true)
+    @Column(name = "icao_code", length = 4, nullable = false, unique = true, updatable = false)
     private String icaoCode;
 
-    @Column(length = 20, nullable = false)
-    private String country;
-
-    @Column(length = 20, nullable = false)
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "city_zipcode")
+    private CityEntity city;
 }

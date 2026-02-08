@@ -4,8 +4,8 @@ import com.air.pujanke.exception.exceptiontype.UserNotFoundException;
 import com.air.pujanke.model.dto.*;
 import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
-import com.air.pujanke.utility.ConfiguredObjectMapper;
 import com.air.pujanke.service.validator.UserAccountOperationValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserAccountOperationValidator userAccountOpValidator;
+    private final ObjectMapper mapper;
 
     public boolean isUsernameTaken(@NonNull String username) {
         return userRepository.existsByUsername(username);
@@ -28,7 +29,7 @@ public class UserService {
 
     public void createUser(UserRegistrationDto userDto) {
         userAccountOpValidator.validateRegistration(userDto);
-        var user = ConfiguredObjectMapper.getMapper().convertValue(userDto, UserEntity.class);
+        var user = mapper.convertValue(userDto, UserEntity.class);
         user.setPasswordHash(passwordEncoder.encode(userDto.passwordPlain()));
         user.setIsEnabled(true);
         userRepository.save(user);
@@ -36,7 +37,7 @@ public class UserService {
 
     public UserAccountPageDetailsDto fetchUserAccountPageDetails(@NonNull String username) {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
-        return ConfiguredObjectMapper.getMapper().convertValue(user, UserAccountPageDetailsDto.class);
+        return mapper.convertValue(user, UserAccountPageDetailsDto.class);
     }
 
     @Transactional
