@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir (admin) - user management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/text_style.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+<th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
+<th:block th:replace="~{fragments/success_message :: success_message}"></th:block>
+
+<div class="container my-5">
+    <table class="table table-striped table-hover table-sm align-middle w-75 mx-auto">
+        <tr class="table-primary">
+            <th>Username</th>
+            <th>Registered at</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.registrationTimestamp}"></td>
+            <td class="d-flex flex-row w-100 gap-5 justify-content-center py-auto">
+                <form class="w-25" method="post" th:action="@{/admin/users/{username}(username=${user.username})}">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <button type="submit" class="btn w-100" th:classappend="${user.isEnabled} ? 'btn-danger' : 'btn-success'" th:text="${user.isEnabled} ? 'Disable' : 'Enable'"></button>
+                </form>
+                <form class="w-25" method="post" th:action="@{/admin/users/{username}(username=${user.username})}">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-danger w-100">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

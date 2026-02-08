@@ -1,4 +1,4 @@
-package com.air.pujanke.controller;
+package com.air.pujanke.controller.api;
 
 import com.air.pujanke.service.UserService;
 import lombok.RequiredArgsConstructor;

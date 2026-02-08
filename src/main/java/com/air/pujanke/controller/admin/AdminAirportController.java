@@ -1,4 +1,4 @@
-package com.air.pujanke.controller;
+package com.air.pujanke.controller.admin;
 
 import com.air.pujanke.model.dto.AirportCreationDto;
 import com.air.pujanke.service.AirportService;

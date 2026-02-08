@@ -1,6 +1,6 @@
 package com.air.pujanke.service;
 
-import com.air.pujanke.exception.exceptiontype.UserNotFoundException;
+import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
 import com.air.pujanke.model.dto.*;
 import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +38,20 @@ public class UserService {
     }
 
     public UserAccountPageDetailsDto fetchUserAccountPageDetails(@NonNull String username) {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
         return mapper.convertValue(user, UserAccountPageDetailsDto.class);
     }
 
+    public List<UserManagementDto> fetchUsersForManagement() {
+        List<UserManagementDto> userDtos = new ArrayList<>();
+        userRepository.findAllByHasAdminPrivilegesFalse().forEach(user -> userDtos.add(mapper.convertValue(user, UserManagementDto.class)));
+        return userDtos;
+    }
+
+
     @Transactional
     public void modifyUserFunds(@NonNull String username, UserFundModificationDto fundDto) {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
         userAccountOpValidator.validateFundModification(user, fundDto);
         BigDecimal newAmount;
 
@@ -56,15 +65,28 @@ public class UserService {
 
     @Transactional
     public void resetPassword(@NonNull String username, UserPasswordResetDto passwordResetDto) {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
         userAccountOpValidator.validatePasswordReset(user, passwordResetDto);
         user.setPasswordHash(passwordEncoder.encode(passwordResetDto.newPassword()));
     }
 
     @Transactional
     public void deleteAccount(@NonNull String username, UserAccountDeletionDto deletionDto) {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
         userAccountOpValidator.validateAccountDeletion(user, deletionDto);
         userRepository.delete(user);
+    }
+    
+    @Transactional
+    public void adminDeleteAccount(@NonNull String username) {
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public void toggleAccountEnabled(@NonNull String username) {
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
+        user.setIsEnabled(!user.getIsEnabled());
+        userRepository.save(user);
     }
 }

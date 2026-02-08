@@ -1,4 +1,4 @@
-package com.air.pujanke.controller;
+package com.air.pujanke.controller.user;
 
 import com.air.pujanke.model.dto.UserRegistrationDto;
 import com.air.pujanke.service.UserService;

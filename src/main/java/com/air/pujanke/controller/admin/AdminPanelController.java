@@ -1,4 +1,4 @@
-package com.air.pujanke.controller;
+package com.air.pujanke.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
