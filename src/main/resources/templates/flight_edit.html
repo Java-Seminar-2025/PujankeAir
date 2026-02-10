@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PujankeAir (admin) - flights - edit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/text_style.css}" rel="stylesheet">
+    <link th:href="@{/css/flight_admin.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+<th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
+<th:block th:replace="~{fragments/success_message :: success_message}"></th:block>
+
+<div class="card shadow-sm">
+    <div class="card-header fw-semibold">Update flight</div>
+    <div class="card-body">
+        <form method="post" th:object="${flightForm}" th:action="@{/admin/flights/{flightId}(flightId=${flightForm.flightId})}" class="row g-3 align-items-end">
+            <input type="hidden" name="_method" value="patch">
+            <div class="col-12 col-lg-3">
+                <label class="form-label">Aircraft</label>
+                <select th:field="*{aircraftId}" class="form-select">
+                    <option th:each="aircraft : ${aircrafts}" th:value="${aircraft.aircraftId}"
+                            th:text="|${aircraft.aircraftId}, ${aircraft.manufacturerName} ${aircraft.modelName}|"></option>
+                </select>
+            </div>
+
+            <div class="col-12 col-lg-3">
+                <label class="form-label">Pilot</label>
+                <select th:field="*{pilotPin}" class="form-select">
+                    <option th:each="pilot : ${pilots}" th:value="${pilot.pin}"
+                            th:text="|${pilot.rank}. ${pilot.fullName}, ${pilot.pin}|"></option>
+                </select>
+            </div>
+
+            <div class="col-12 col-lg-3">
+                <label class="form-label">Origin</label>
+                <select th:field="*{takeoffAirportIcao}" class="form-select">
+                    <option th:each="airport : ${airports}" th:value="${airport.icaoCode}"
+                            th:text="|${airport.icaoCode} ${airport.airportName}|"></option>
+                </select>
+            </div>
+
+            <div class="col-12 col-lg-3">
+                <label class="form-label">Destination</label>
+                <select th:field="*{destinationAirportIcao}" class="form-select">
+                    <option th:each="airport : ${airports}" th:value="${airport.icaoCode}"
+                            th:text="|${airport.icaoCode} ${airport.airportName}|"></option>
+                </select>
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label">Date</label>
+                <p th:text="|DEBUG *{takeoffDate}|"></p>
+                <input type="date" class="form-control" th:field="*{takeoffDate}">
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label">Time</label>
+                <input type="time" class="form-control" th:field="*{takeoffTime}">
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label">Base fare</label>
+                <input type="number" min="0" max="1000000" step="0.01"
+                       class="form-control text-end" th:field="*{baseFare}" placeholder="0.00">
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label">Duration (min)</label>
+                <input type="number" min="0" step="1" max="10000"
+                       class="form-control text-end" th:field="*{estimatedDurationMinutes}" placeholder="0">
+            </div>
+
+            <div class="col-12 col-lg-2 ms-auto">
+                <button type="submit" class="btn btn-primary w-100">Update</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

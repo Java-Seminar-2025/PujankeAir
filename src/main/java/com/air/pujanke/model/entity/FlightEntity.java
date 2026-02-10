@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Flight")
+@Table(name = "`Flight`")
 public class FlightEntity {
 
     @Id
@@ -29,10 +29,10 @@ public class FlightEntity {
     private Integer estimatedDurationMinutes;
 
     @Column(name = "takeoff_date", nullable = false)
-    private Date takeoffDate;
+    private LocalDate takeoffDate;
 
     @Column(name = "takeoff_time")
-    private Timestamp takeoffTime;
+    private LocalTime takeoffTime;
 
     @ManyToOne
     @JoinColumn(name = "takeoff_airport_id")

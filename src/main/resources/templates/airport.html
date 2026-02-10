@@ -37,11 +37,12 @@
                     <button type="submit" class="btn btn-danger w-100">Delete</button>
                 </form>
             </td>
+        </tr>
     </table>
     <form method="post" th:object="${airportForm}" th:action="@{/admin/airport}" class="w-75 d-flex flex-row gap-4 justify-content-center mx-auto">
         <input maxlength="4" minlength="4" type="text" class="form-control" id="icao" th:field="*{icaoCode}" placeholder="ICAO code" required>
         <input maxlength="40" type="text" class="form-control" id="airport-name" th:field="*{airportName}" placeholder="Airport name" required>
-        <select th:field="*{cityZipcode}">
+        <select th:field="*{cityZipcode}" class="form-select">
             <option th:each="city : ${cities}" th:value="${city.zipcode}" th:text="| ${city.zipcode} ${city.cityName}, ${city.countryName}|"></option>
         </select>
         <button type="submit" class="btn btn-primary w-100">Add</button>

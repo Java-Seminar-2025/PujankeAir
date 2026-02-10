@@ -17,6 +17,10 @@
     <strong>Error:</strong> Invalid login credentials.
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
+<div th:if="${param.expired}" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Warning:</strong> You have been logged out.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 
 <main class="py-4 w-100 px-5 d-flex justify-content-center">
     <form class="w-25 d-flex flex-column gap-4 px-5 pt-5" method="post" th:action=@{/login}>

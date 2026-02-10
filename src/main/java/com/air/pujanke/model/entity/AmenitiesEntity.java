@@ -1,6 +1,6 @@
 package com.air.pujanke.model.entity;
 
-import com.air.pujanke.model.compositeidentity.AmenitiesIdentity;
+import com.air.pujanke.model.custom.AmenitiesIdentity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Amenities")
+@Table(name = "`Amenities`")
 public class AmenitiesEntity {
 
     @EmbeddedId

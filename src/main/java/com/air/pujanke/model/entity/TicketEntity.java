@@ -1,6 +1,8 @@
 package com.air.pujanke.model.entity;
 
+import com.air.pujanke.model.custom.Seat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +15,9 @@ import java.time.Instant;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "Ticket",
+        name = "`Ticket`",
         uniqueConstraints = {
-            @UniqueConstraint(name = "seat_pick_unique", columnNames = {"flight_id", "seat_number"})
+            @UniqueConstraint(name = "seat_pick_unique", columnNames = {"flight_id", "seat_row", "seat_column"})
         }
       )
 public class TicketEntity {
@@ -29,8 +31,9 @@ public class TicketEntity {
     @JoinColumn(name = "flight_id", nullable = false)
     private FlightEntity flight;
 
-    @Column(name = "seat_number", length = 5, nullable = false)
-    private String seatNumber;
+    @Embedded
+    @NotNull
+    private Seat seat;
 
     @Column(name = "ticket_holder_fullname", length = 40, nullable = false)
     private String ticketHolderFullName;
@@ -46,8 +49,4 @@ public class TicketEntity {
 
     @Column(name = "generation_timestamp", insertable = false, updatable = false, nullable = false)
     private Instant generationTimestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private OrderEntity order;
 }

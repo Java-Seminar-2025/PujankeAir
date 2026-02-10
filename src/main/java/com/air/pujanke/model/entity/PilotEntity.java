@@ -12,7 +12,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Pilot")
+@Table(name = "`Pilot`")
 public class PilotEntity {
 
 
@@ -24,7 +24,7 @@ public class PilotEntity {
     @Column(name = "full_name", length = 40, nullable = false)
     private String fullName;
 
-    @Column(length = 11, nullable = false)
+    @Column(length = 11, nullable = false, unique = true)
     private String pin;
 
     @Column(name = "flight_hours")

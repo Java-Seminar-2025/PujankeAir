@@ -1,4 +1,4 @@
-package com.air.pujanke.model.compositeidentity;
+package com.air.pujanke.model.custom;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

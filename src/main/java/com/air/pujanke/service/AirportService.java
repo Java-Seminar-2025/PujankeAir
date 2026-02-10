@@ -1,8 +1,8 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.AirportAdminReadDto;
-import com.air.pujanke.model.dto.AirportCreationDto;
+import com.air.pujanke.model.dto.AirportReadDto;
+import com.air.pujanke.model.dto.AirportModificationDto;
 import com.air.pujanke.model.entity.AirportEntity;
 import com.air.pujanke.repository.AirportRepository;
 import com.air.pujanke.repository.CityRepository;
@@ -23,21 +23,20 @@ public class AirportService {
     private final ObjectMapper objectMapper;
     private final CityRepository cityRepository;
 
-    public List<AirportAdminReadDto> getAllAirportsAdmin() {
-        List<AirportAdminReadDto> airportDtos = new ArrayList<>();
+    public List<AirportReadDto> getAllAirportsAdmin() {
+        List<AirportReadDto> airportDtos = new ArrayList<>();
         airportRepository.findAll()
-                .forEach(airport -> airportDtos.add(objectMapper.convertValue(airport, AirportAdminReadDto.class)));
+                .forEach(airport -> airportDtos.add(objectMapper.convertValue(airport, AirportReadDto.class)));
         return airportDtos;
     }
 
-    public AirportCreationDto getAirport(String icaoCode) {
-      return objectMapper.convertValue(airportRepository
-              .findByIcaoCode(icaoCode)
-              .orElseThrow(() -> new InvalidArgumentException("Airport not found.")), AirportCreationDto.class
-      );
+    public AirportModificationDto getAirport(String icaoCode) {
+        var airport = airportRepository.findByIcaoCode(icaoCode)
+                .orElseThrow(() -> new InvalidArgumentException("Airport not found."));
+        return new AirportModificationDto(airport.getAirportName(), airport.getIcaoCode(), airport.getCity().getZipcode());
     }
 
-    public void createAirport(AirportCreationDto airportDto) {
+    public void createAirport(AirportModificationDto airportDto) {
         airportCrudValidator.validateAirportCreation(airportDto);
         AirportEntity airport = objectMapper.convertValue(airportDto, AirportEntity.class);
         cityRepository.findById(airportDto.cityZipcode()).ifPresent(airport::setCity);
@@ -46,7 +45,7 @@ public class AirportService {
 
 
     @Transactional
-    public void updateAirport(AirportCreationDto airportDto) {
+    public void updateAirport(AirportModificationDto airportDto) {
         airportCrudValidator.validateAirportUpdate(airportDto);
         AirportEntity airport = airportRepository.findByIcaoCode(airportDto.icaoCode()).orElseThrow(() -> new InvalidArgumentException("Airport not found."));
         airport.setAirportName(airportDto.airportName());

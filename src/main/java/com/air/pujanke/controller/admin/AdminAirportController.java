@@ -1,6 +1,6 @@
 package com.air.pujanke.controller.admin;
 
-import com.air.pujanke.model.dto.AirportCreationDto;
+import com.air.pujanke.model.dto.AirportModificationDto;
 import com.air.pujanke.service.AirportService;
 import com.air.pujanke.service.CityService;
 import jakarta.validation.Valid;
@@ -22,13 +22,13 @@ public class AdminAirportController {
     public String getAirportForm(Model model) {
 
         model.addAttribute("airports", airportService.getAllAirportsAdmin());
-        model.addAttribute("airportForm", new AirportCreationDto(null, null, null));
+        model.addAttribute("airportForm", new AirportModificationDto(null, null, null));
         model.addAttribute("cities",  cityService.getAllCities());
         return "airport";
     }
 
     @PostMapping
-    public String addAirport(@ModelAttribute("airportForm") @Valid AirportCreationDto airportForm, RedirectAttributes ra) {
+    public String addAirport(@ModelAttribute("airportForm") @Valid AirportModificationDto airportForm, RedirectAttributes ra) {
         airportService.createAirport(airportForm);
         ra.addFlashAttribute("success", "Airport has been successfully created.");
         return "redirect:/admin/airport";
@@ -49,7 +49,7 @@ public class AdminAirportController {
     }
 
     @PatchMapping
-    public String updateAirport(@ModelAttribute("airportForm") @Valid AirportCreationDto airportDto, RedirectAttributes ra) {
+    public String updateAirport(@ModelAttribute("airportForm") @Valid AirportModificationDto airportDto, RedirectAttributes ra) {
 
         airportService.updateAirport(airportDto);
         ra.addFlashAttribute("success", "Airport successsfully updated.");

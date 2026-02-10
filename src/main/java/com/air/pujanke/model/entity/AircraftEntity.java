@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Aircraft")
+@Table(name = "`Aircraft`")
 public class AircraftEntity {
 
     @Id

@@ -1,0 +1,24 @@
+.admin-flights .card-header {
+    background: #f8f9fa;
+}
+
+.admin-flights table th,
+.admin-flights table td {
+    vertical-align: middle;
+}
+
+.admin-flights table td {
+    padding-top: .6rem;
+    padding-bottom: .6rem;
+}
+
+.admin-flights .table-responsive {
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+}
+
+.admin-flights .form-label {
+    margin-bottom: .25rem;
+    font-size: .9rem;
+    opacity: .9;
+}

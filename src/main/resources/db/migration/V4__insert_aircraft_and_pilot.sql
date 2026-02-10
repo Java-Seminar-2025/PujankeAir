@@ -12,6 +12,6 @@ VALUES
 INSERT INTO `Pilot`
 (full_name, pin, flight_hours, `rank`)
 VALUES
-('Ante Matic', '11111111111', 5000, 'CAPTAIN'),
-('Mate Sakic', '22222222222', 2000, 'CAPTAIN'),
-('Jozo Simic', '33333333333', 6000, 'CAPTAIN');
+('Ante Matic', '11111111111', 5000, 'CPT'),
+('Mate Sakic', '22222222222', 2000, 'SO'),
+('Jozo Simic', '33333333333', 6000, 'FO');
