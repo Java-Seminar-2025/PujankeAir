@@ -16,7 +16,7 @@ public class AdminFlightCrudValidator {
     private final TicketRepository ticketRepository;
 
     public void validateFlightModification(FlightModificationDto flightDto) {
-        if (flightDto.takeoffDate().isBefore(LocalDate.now()) && flightDto.takeoffTime().isBefore(LocalTime.now())
+        if (flightDto.takeoffDate().equals(LocalDate.now()) && flightDto.takeoffTime().isBefore(LocalTime.now())
         || flightDto.takeoffDate().isBefore(LocalDate.now()))
             throw new InvalidArgumentException("Cannot schedule a flight in the past.");
     }
