@@ -17,6 +17,13 @@ public class AdminUserManagementController {
     private final UserService userService;
     private final SessionRegistry sessionRegistry;
 
+    private void expireSessionsForUser(String username) {
+        sessionRegistry.getAllPrincipals().stream().filter(p ->
+                        p instanceof UserDetails user && user.getUsername().equals(username))
+                .forEach(p -> sessionRegistry.getAllSessions(p, false)
+                        .forEach(SessionInformation::expireNow));
+    }
+
     @GetMapping
     public String getUserManagementPage(Model model) {
         model.addAttribute("users", userService.fetchUsersForManagement());
@@ -26,21 +33,14 @@ public class AdminUserManagementController {
     @PatchMapping("/{username}")
     public String changeUserEnabledState(@PathVariable String username){
         userService.toggleAccountEnabled(username);
-        sessionRegistry.getAllPrincipals().stream().filter(p ->
-                p instanceof UserDetails user && user.getUsername().equals(username))
-                .forEach(p -> sessionRegistry.getAllSessions(p, false)
-                        .forEach(SessionInformation::expireNow));
+        expireSessionsForUser(username);
         return "redirect:/admin/users";
     }
 
     @DeleteMapping("/{username}")
     public String deleteUser(@PathVariable String username){
         userService.adminDeleteAccount(username);
-        sessionRegistry.getAllPrincipals().stream().filter(p ->
-                p instanceof UserDetails user && user.getUsername().equals(username))
-                .forEach(p -> sessionRegistry.getAllSessions(p, false)
-                        .forEach(SessionInformation::expireNow));
-
+        expireSessionsForUser(username);
         return "redirect:/admin/users";
     }
 }
