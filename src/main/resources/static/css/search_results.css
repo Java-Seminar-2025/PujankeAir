@@ -1,0 +1,26 @@
+/* /static/css/search_results.css */
+
+.flight-card .flight-route {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.flight-card .flight-airport {
+    min-width: 220px;
+}
+
+.flight-card .flight-icao {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.flight-card .flight-name {
+    line-height: 1.15;
+}
+
+.flight-card .flight-arrow {
+    font-size: 1.25rem;
+    font-weight: 700;
+}

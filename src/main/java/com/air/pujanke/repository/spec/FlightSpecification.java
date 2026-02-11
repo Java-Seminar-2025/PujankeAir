@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class FlightSpecification {
     private FlightSpecification() {}
@@ -39,8 +40,20 @@ public class FlightSpecification {
     }
 
     public static Specification<FlightEntity> notExpired() {
-        return (root, query, cb) -> cb.greaterThan(root.get("takeoffDate"), LocalDate.now());
+        return (root, query, cb) -> {
+            LocalDate today = LocalDate.now();
+            LocalTime now = LocalTime.now();
+
+            return cb.or(
+                    cb.greaterThan(root.get("takeoffDate"), today),
+                    cb.and(
+                            cb.equal(root.get("takeoffDate"), today),
+                            cb.greaterThan(root.get("takeoffTime"), now)
+                    )
+            );
+        };
     }
+
 
     public static Specification<FlightEntity> fromDto(FlightSearchFormDto dto) {
         return Specification

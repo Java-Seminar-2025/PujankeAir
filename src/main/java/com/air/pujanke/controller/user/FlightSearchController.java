@@ -20,14 +20,15 @@ public class FlightSearchController {
     private final FlightService flightService;
 
     public static boolean hasSearched(FlightSearchFormDto searchDto) {
-        return searchDto.baseFareLesserThan() != null || searchDto.destinationAirportIcao() != null ||
-                searchDto.originAirportIcao() != null || searchDto.takeoffDate() != null;
+        return !(searchDto.baseFareLesserThan() == null && (searchDto.destinationAirportIcao() == null ||
+                searchDto.destinationAirportIcao().isBlank()) && (searchDto.originAirportIcao() == null ||
+                searchDto.originAirportIcao().isBlank()) && searchDto.takeoffDate() == null);
     }
 
     @GetMapping
     public String search(Model model, Pageable pageable, @ModelAttribute("flightSearch") @Valid FlightSearchFormDto flightSearchFormDto) {
-        model.addAttribute("flightSearch", new FlightSearchFormDto(null, null,
-                null, null));
+        //model.addAttribute("flightSearch", new FlightSearchFormDto(null, null,
+        //        null, null));
         model.addAttribute("airports", airportService.getAllAirportsAdmin());
 
         if (hasSearched(flightSearchFormDto)) {
