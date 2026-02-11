@@ -18,9 +18,4 @@ public class PublicController {
     public String getAboutPage() {
         return "about";
     }
-
-    @GetMapping("/search")
-    public String getSearchPage() {
-        return "search";
-    }
 }

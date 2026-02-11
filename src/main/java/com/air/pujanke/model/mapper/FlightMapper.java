@@ -2,6 +2,7 @@ package com.air.pujanke.model.mapper;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
 import com.air.pujanke.model.dto.FlightModificationDto;
+import com.air.pujanke.model.dto.FlightSearchResultDto;
 import com.air.pujanke.model.entity.FlightEntity;
 import com.air.pujanke.repository.AircraftRepository;
 import com.air.pujanke.repository.AirportRepository;
@@ -42,5 +43,24 @@ public class FlightMapper {
                 .orElseThrow(() -> new InvalidArgumentException("The pilot doesn't exist.")));
 
         return flightEntity;
+    }
+
+    public FlightSearchResultDto toFlightSearchResultDto(FlightEntity entity) {
+
+        var destinationAirportPresent = entity.getDestinationAirport() != null;
+        var destinationAirportCityPresent = destinationAirportPresent && entity.getDestinationAirport().getCity() != null;
+        var originAirportPresent = entity.getTakeoffAirport() != null;
+        var originAirportCityPresent = originAirportPresent && entity.getTakeoffAirport().getCity() != null;
+
+        var destinationIcao = destinationAirportPresent ?  entity.getDestinationAirport().getIcaoCode() : null;
+        var destinationName = destinationAirportPresent ? entity.getDestinationAirport().getAirportName() : null;
+        var destinationCity =  destinationAirportPresent ?  entity.getDestinationAirport().getCity().getCityName() : null;
+
+        var originIcao = originAirportPresent ? entity.getTakeoffAirport().getIcaoCode() : null;
+        var originName =  originAirportPresent ? entity.getTakeoffAirport().getAirportName() : null;
+        var originCity =  originAirportPresent ? entity.getTakeoffAirport().getCity().getCityName() : null;
+
+        return new FlightSearchResultDto(entity.getFlightId(), entity.getTakeoffDate(), entity.getTakeoffTime(),
+                originName, originIcao, originCity, destinationName, destinationIcao, destinationCity, entity.getBaseFare());
     }
 }

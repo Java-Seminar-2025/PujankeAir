@@ -3,16 +3,21 @@ package com.air.pujanke.service;
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
 import com.air.pujanke.model.dto.FlightModificationDto;
 import com.air.pujanke.model.dto.FlightReadDto;
+import com.air.pujanke.model.dto.FlightSearchFormDto;
+import com.air.pujanke.model.dto.FlightSearchResultDto;
 import com.air.pujanke.model.entity.FlightEntity;
 import com.air.pujanke.model.mapper.FlightMapper;
 import com.air.pujanke.repository.AircraftRepository;
 import com.air.pujanke.repository.AirportRepository;
 import com.air.pujanke.repository.FlightRepository;
 import com.air.pujanke.repository.PilotRepository;
+import com.air.pujanke.repository.spec.FlightSpecification;
 import com.air.pujanke.service.validator.AdminFlightCrudValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -45,6 +50,12 @@ public class FlightService {
         var flight =  flightRepository.findById(flightId)
                 .orElseThrow(() -> new InvalidArgumentException("Flight not found."));
         return customMapper.toFlightModificationDto(flight);
+    }
+
+    public Page<FlightSearchResultDto> getFilteredSearchResults(FlightSearchFormDto  searchForm, Pageable pageable) {
+
+        return flightRepository.findAll(FlightSpecification.fromDto(searchForm), pageable)
+                .map(customMapper::toFlightSearchResultDto);
     }
 
     public void scheduleFlight(FlightModificationDto flightDto) {
