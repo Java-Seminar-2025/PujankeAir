@@ -1,4 +1,3 @@
-
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
@@ -10,22 +9,28 @@
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/text_style.css}" rel="stylesheet">
     <link th:href="@{/css/search_results.css}" rel="stylesheet">
+    <script th:src="@{/js/search_sort.js}" defer></script>
 </head>
 <body>
 <th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
 <th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
 <th:block th:replace="~{fragments/success_message :: success_message}"></th:block>
+
 <div class="container my-4">
     <div class="card shadow-sm mx-auto" style="max-width: 720px;">
         <div class="card-body py-3">
-            <form th:action="@{/search}" method="get" th:object="${flightSearch}">
+            <form th:action="@{/search}" method="get" th:object="${flightSearch}" id="searchForm">
+                <input type="hidden" name="page" id="page" th:value="${param.page != null ? param.page[0] : 0}">
+                <input type="hidden" name="sort" id="sortPrimary" value="">
+                <input type="hidden" name="sort" id="sortSecondary" value="" disabled>
+
                 <div class="row g-2">
 
                     <div class="col-md-6">
                         <label for="originAirportIcao" class="form-label small mb-1">Origin</label>
                         <select id="originAirportIcao" class="form-select form-select-sm" th:field="*{originAirportIcao}">
                             <option value="">Select origin</option>
-                            <option th:each="airport : ${airports}" th:value="${airport.icaoCode}" th:text="${airport.airportName}"></option>
+                            <option th:each="airport : ${airports}" th:value="${airport.icaoCode}" th:text="|${airport.icaoCode} ${airport.airportName}, ${airport.city.cityName}|"></option>
                         </select>
                     </div>
 
@@ -33,7 +38,7 @@
                         <label for="destinationAirportIcao" class="form-label small mb-1">Destination</label>
                         <select id="destinationAirportIcao" class="form-select form-select-sm" th:field="*{destinationAirportIcao}">
                             <option value="">Select destination</option>
-                            <option th:each="airport : ${airports}" th:value="${airport.icaoCode}" th:text="${airport.airportName}"></option>
+                            <option th:each="airport : ${airports}" th:value="${airport.icaoCode}" th:text="|${airport.icaoCode} ${airport.airportName}, ${airport.city.cityName}|"></option>
                         </select>
                     </div>
 
@@ -47,8 +52,67 @@
                         <input id="baseFareLesserThan" type="number" class="form-control form-control-sm" step="0.01" min="0" max="1000000" th:field="*{baseFareLesserThan}">
                     </div>
 
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-sm btn-primary w-100">Search</button>
+                    <div class="col-md-4">
+                        <label for="size" class="form-label small mb-1">Page size</label>
+                        <select id="size" name="size" class="form-select form-select-sm">
+                            <option value="5"
+                                    th:selected="${(param.size != null ? param.size[0] : (flights != null ? '' + flights.size : '10')) == '5'}">5</option>
+                            <option value="10"
+                                    th:selected="${(param.size != null ? param.size[0] : (flights != null ? '' + flights.size : '10')) == '10'}">10</option>
+                            <option value="15"
+                                    th:selected="${(param.size != null ? param.size[0] : (flights != null ? '' + flights.size : '10')) == '15'}">15</option>
+                            <option value="20"
+                                    th:selected="${(param.size != null ? param.size[0] : (flights != null ? '' + flights.size : '10')) == '20'}">20</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 mt-2">
+                        <div class="d-flex flex-wrap gap-3 align-items-center">
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                <span class="small text-muted">Sort by</span>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="sortByFare" value="fare"
+                                           th:checked="${param.sort == null || (param.sort.size() >= 1 && param.sort[0].startsWith('baseFare,'))}">
+                                    <label class="form-check-label small" for="sortByFare">Base fare</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="sortByTime" value="time"
+                                           th:checked="${param.sort != null && param.sort.size() == 2 && param.sort[0].startsWith('takeoffDate,') && param.sort[1].startsWith('takeoffTime,')}">
+                                    <label class="form-check-label small" for="sortByTime">Takeoff time</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                <span class="small text-muted">Order</span>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortDir" id="sortDirAsc" value="asc"
+                                           th:checked="${param.sort == null || (param.sort.size() >= 1 && param.sort[0].endsWith(',asc'))}">
+                                    <label class="form-check-label small" for="sortDirAsc">↑</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortDir" id="sortDirDesc" value="desc"
+                                           th:checked="${param.sort != null && param.sort.size() >= 1 && param.sort[0].endsWith(',desc')}">
+                                    <label class="form-check-label small" for="sortDirDesc">↓</label>
+                                </div>
+                            </div>
+
+                            <div class="ms-auto d-flex gap-2">
+                                <button type="submit" class="btn btn-sm btn-primary px-4">Search</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" th:if="${flights != null}">
+                        <div class="text-muted small mt-2" th:if="${flights.totalElements > 0}"
+                             th:text="'Results: ' + ${flights.totalElements} + ' • Page ' + ${flights.number + 1} + ' of ' + ${flights.totalPages}">
+                        </div>
+                        <div class="text-muted small mt-2" th:if="${flights.totalElements == 0}">
+                            No matching flights found.
+                        </div>
                     </div>
 
                 </div>
@@ -57,79 +121,7 @@
     </div>
 </div>
 
-
 <div class="container my-4" th:if="${flights != null}">
-
-
-    <div class="card shadow-sm mb-3">
-        <div class="card-body py-3">
-            <form th:action="@{/search}" method="get" class="row g-2 align-items-end">
-
-
-                <input type="hidden" name="originAirportIcao" th:value="${flightSearch.originAirportIcao}">
-                <input type="hidden" name="destinationAirportIcao" th:value="${flightSearch.destinationAirportIcao}">
-                <input type="hidden" name="takeoffDate" th:value="${flightSearch.takeoffDate}">
-                <input type="hidden" name="baseFareLesserThan" th:value="${flightSearch.baseFareLesserThan}">
-
-
-                <div class="col-12 col-md-3">
-                    <label for="size" class="form-label small mb-1">Page size</label>
-                    <select id="size" name="size" class="form-select form-select-sm">
-                        <option value="5" th:selected="${flights.size == 5}">5</option>
-                        <option value="10" th:selected="${flights.size == 10}">10</option>
-                        <option value="15" th:selected="${flights.size == 15}">15</option>
-                        <option value="20" th:selected="${flights.size == 20}">20</option>
-                    </select>
-                </div>
-
-
-                <div class="col-12 col-md-7">
-                    <label class="form-label small mb-1">Sort</label>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sort" id="sortFareAsc" value="baseFare,asc"
-                                   th:checked="${param.sort == null || param.sort[0] == 'baseFare,asc'}">
-                            <label class="form-check-label small" for="sortFareAsc">Base fare ↑</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sort" id="sortFareDesc" value="baseFare,desc"
-                                   th:checked="${param.sort != null && param.sort[0] == 'baseFare,desc'}">
-                            <label class="form-check-label small" for="sortFareDesc">Base fare ↓</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sort" id="sortTimeAsc" value="takeoffTime,asc"
-                                   th:checked="${param.sort != null && param.sort[0] == 'takeoffTime,asc'}">
-                            <label class="form-check-label small" for="sortTimeAsc">Takeoff time ↑</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sort" id="sortTimeDesc" value="takeoffTime,desc"
-                                   th:checked="${param.sort != null && param.sort[0] == 'takeoffTime,desc'}">
-                            <label class="form-check-label small" for="sortTimeDesc">Takeoff time ↓</label>
-                        </div>
-
-
-                        <input type="hidden" name="sort" th:if="${param.sort == null}" value="baseFare,asc">
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-2">
-
-                    <input type="hidden" name="page" value="0">
-                    <button type="submit" class="btn btn-sm btn-primary w-100">Apply</button>
-                </div>
-
-                <div class="col-12">
-                    <div class="text-muted small mt-1" th:if="${flights.totalElements > 0}"
-                         th:text="'Results: ' + ${flights.totalElements} + ' • Page ' + ${flights.number + 1} + ' of ' + ${flights.totalPages}">
-                    </div>
-                    <div class="text-muted small mt-1" th:if="${flights.totalElements == 0}">
-                        No matching flights found.
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
 
     <div class="d-flex flex-column gap-2" th:if="${flights.totalElements > 0}">
         <div class="card shadow-sm flight-card" th:each="f : ${flights.content}">
@@ -145,16 +137,16 @@
 
                         <div class="flight-route">
                             <div class="flight-airport">
-                                <div class="flight-icao" th:text="${f.originAirportIcao != null ? f.originAirportIcao : 'N/A'}"></div>
-                                <div class="flight-name text-muted" th:text="${f.originAirportName != null ? f.originAirportName : 'N/A'}"></div>
+                                <div class="flight-icao" th:text="${f.originAirportIcao != null ? f.originAirportIcao : 'none'}"></div>
+                                <div class="flight-name text-muted" th:text="${f.originAirportName != null ? f.originAirportName : 'none'}"></div>
                                 <div class="flight-city small text-muted" th:text="${f.originAirportCityName != null ? f.originAirportCityName : ''}"></div>
                             </div>
 
                             <div class="flight-arrow text-muted">→</div>
 
                             <div class="flight-airport">
-                                <div class="flight-icao" th:text="${f.destinationAirportIcao != null ? f.destinationAirportIcao : 'N/A'}"></div>
-                                <div class="flight-name text-muted" th:text="${f.destinationAirportName != null ? f.destinationAirportName : 'N/A'}"></div>
+                                <div class="flight-icao" th:text="${f.destinationAirportIcao != null ? f.destinationAirportIcao : 'none'}"></div>
+                                <div class="flight-name text-muted" th:text="${f.destinationAirportName != null ? f.destinationAirportName : 'none'}"></div>
                                 <div class="flight-city small text-muted" th:text="${f.destinationAirportCityName != null ? f.destinationAirportCityName : ''}"></div>
                             </div>
                         </div>
@@ -164,7 +156,7 @@
                         <div class="text-end">
                             <div class="text-muted small">Base fare</div>
                             <div class="fs-5 fw-semibold"
-                                 th:text="${f.baseFare != null ? (#numbers.formatDecimal(f.baseFare, 1, 'COMMA', 2, 'POINT')) : 'N/A'}">
+                                 th:text="${f.baseFare != null ? (#numbers.formatDecimal(f.baseFare, 1, 'COMMA', 2, 'POINT')) : 'none'}">
                             </div>
                         </div>
 
@@ -176,13 +168,31 @@
         </div>
     </div>
 
-
     <nav th:if="${flights.totalPages > 1}" aria-label="Search results pages" class="mt-3">
         <ul class="pagination pagination-sm justify-content-center mb-0">
 
             <li class="page-item" th:classappend="${flights.first} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao}, destinationAirportIcao=${flightSearch.destinationAirportIcao}, takeoffDate=${flightSearch.takeoffDate}, baseFareLesserThan=${flightSearch.baseFareLesserThan}, page=${flights.number - 1}, size=${flights.size}, sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
+                   th:if="${param.sort != null && param.sort.size() == 2}"
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${flights.number - 1},
+                                      size=${flights.size},
+                                      sort=${param.sort[0]},
+                                      sort=${param.sort[1]})}">
+                    Prev
+                </a>
+                <a class="page-link"
+                   th:unless="${param.sort != null && param.sort.size() == 2}"
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${flights.number - 1},
+                                      size=${flights.size},
+                                      sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
                     Prev
                 </a>
             </li>
@@ -191,14 +201,52 @@
                 th:each="i : ${#numbers.sequence(0, flights.totalPages - 1)}"
                 th:classappend="${i == flights.number} ? 'active'">
                 <a class="page-link"
+                   th:if="${param.sort != null && param.sort.size() == 2}"
                    th:text="${i + 1}"
-                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao}, destinationAirportIcao=${flightSearch.destinationAirportIcao}, takeoffDate=${flightSearch.takeoffDate}, baseFareLesserThan=${flightSearch.baseFareLesserThan}, page=${i}, size=${flights.size}, sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${i},
+                                      size=${flights.size},
+                                      sort=${param.sort[0]},
+                                      sort=${param.sort[1]})}">
+                </a>
+                <a class="page-link"
+                   th:unless="${param.sort != null && param.sort.size() == 2}"
+                   th:text="${i + 1}"
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${i},
+                                      size=${flights.size},
+                                      sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
                 </a>
             </li>
 
             <li class="page-item" th:classappend="${flights.last} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao}, destinationAirportIcao=${flightSearch.destinationAirportIcao}, takeoffDate=${flightSearch.takeoffDate}, baseFareLesserThan=${flightSearch.baseFareLesserThan}, page=${flights.number + 1}, size=${flights.size}, sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
+                   th:if="${param.sort != null && param.sort.size() == 2}"
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${flights.number + 1},
+                                      size=${flights.size},
+                                      sort=${param.sort[0]},
+                                      sort=${param.sort[1]})}">
+                    Next
+                </a>
+                <a class="page-link"
+                   th:unless="${param.sort != null && param.sort.size() == 2}"
+                   th:href="@{/search(originAirportIcao=${flightSearch.originAirportIcao},
+                                      destinationAirportIcao=${flightSearch.destinationAirportIcao},
+                                      takeoffDate=${flightSearch.takeoffDate},
+                                      baseFareLesserThan=${flightSearch.baseFareLesserThan},
+                                      page=${flights.number + 1},
+                                      size=${flights.size},
+                                      sort=${param.sort == null ? 'baseFare,asc' : param.sort[0]})}">
                     Next
                 </a>
             </li>
