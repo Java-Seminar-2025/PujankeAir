@@ -27,8 +27,6 @@ public class FlightSearchController {
 
     @GetMapping
     public String search(Model model, Pageable pageable, @ModelAttribute("flightSearch") @Valid FlightSearchFormDto flightSearchFormDto) {
-        //model.addAttribute("flightSearch", new FlightSearchFormDto(null, null,
-        //        null, null));
         model.addAttribute("airports", airportService.getAllAirportsAdmin());
 
         if (hasSearched(flightSearchFormDto)) {
@@ -37,3 +35,6 @@ public class FlightSearchController {
         return "search";
     }
 }
+
+
+// TODO: Fix sorting by time in the search form.

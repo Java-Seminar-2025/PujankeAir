@@ -46,7 +46,7 @@ public class FlightService {
         return flights;
     }
 
-    public FlightModificationDto getFlight(@PathVariable Integer flightId) {
+    public FlightModificationDto getFlight(Integer flightId) {
         var flight =  flightRepository.findById(flightId)
                 .orElseThrow(() -> new InvalidArgumentException("Flight not found."));
         return customMapper.toFlightModificationDto(flight);

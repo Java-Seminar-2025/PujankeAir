@@ -54,6 +54,10 @@ public class FlightSpecification {
         };
     }
 
+    public static Specification<FlightEntity> airportsNotNull() {
+        return (root, query, cb) -> cb.and(cb.isNotNull(root.get("takeoffAirport")), cb.isNotNull(root.get("destinationAirport")));
+    }
+
 
     public static Specification<FlightEntity> fromDto(FlightSearchFormDto dto) {
         return Specification
@@ -61,6 +65,7 @@ public class FlightSpecification {
                 .and(destinationAirportIcaoEquals(dto.destinationAirportIcao()))
                 .and(takeoffDateEquals(dto.takeoffDate()))
                 .and(baseFareLessThanOrEqual(dto.baseFareLesserThan()))
-                .and(notExpired());
+                .and(notExpired())
+                .and(airportsNotNull());
     }
 }
