@@ -1,7 +1,7 @@
 package com.air.pujanke.controller.admin;
 
 
-import com.air.pujanke.model.dto.FlightModificationDto;
+import com.air.pujanke.model.dto.flight.FlightModificationDto;
 import com.air.pujanke.service.AircraftService;
 import com.air.pujanke.service.AirportService;
 import com.air.pujanke.service.FlightService;

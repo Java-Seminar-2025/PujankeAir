@@ -1,8 +1,8 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.AirportReadDto;
-import com.air.pujanke.model.dto.AirportModificationDto;
+import com.air.pujanke.model.dto.airport.AirportReadDto;
+import com.air.pujanke.model.dto.airport.AirportModificationDto;
 import com.air.pujanke.model.entity.AirportEntity;
 import com.air.pujanke.repository.AirportRepository;
 import com.air.pujanke.repository.CityRepository;

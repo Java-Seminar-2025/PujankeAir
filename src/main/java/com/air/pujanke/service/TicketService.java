@@ -1,21 +1,32 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
+import com.air.pujanke.model.custom.AmenitiesIdentity;
 import com.air.pujanke.model.custom.Seat;
-import com.air.pujanke.model.dto.SeatReservationDto;
+import com.air.pujanke.model.dto.*;
+import com.air.pujanke.model.dto.amenity.AmenityDto;
+import com.air.pujanke.model.dto.ticket.TicketStaticDetailsDto;
+import com.air.pujanke.model.entity.AmenitiesEntity;
 import com.air.pujanke.model.entity.TicketEntity;
+import com.air.pujanke.model.mapper.TicketMapper;
 import com.air.pujanke.repository.FlightRepository;
+import com.air.pujanke.repository.ServiceRepository;
 import com.air.pujanke.repository.TicketRepository;
 import com.air.pujanke.repository.UserRepository;
+import com.air.pujanke.service.security.TicketSecurity;
+import com.air.pujanke.service.utility.TicketHelper;
 import com.air.pujanke.service.validator.TicketBookingValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.math.BigDecimal;
-import java.util.BitSet;
-import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +37,10 @@ public class TicketService {
     private final FlightService flightService;
     private final UserRepository userRepository;
     private final TicketBookingValidator validator;
+    private final TicketSecurity ticketSecurity;
+    private final ObjectMapper objectMapper;
+    private final TicketMapper ticketMapper;
+    private final ServiceRepository serviceRepository;
 
     public int reserveSelectedSeat(Integer flightId, SeatReservationDto seatDto, String username) {
         var flight = flightRepository.findById(flightId).orElseThrow(() -> new InvalidArgumentException("Flight not found."));
@@ -46,32 +61,6 @@ public class TicketService {
         }
     }
 
-    private static int seatToIndex(Seat seat, int cols) {
-        return (seat.getSeatRow() - 1) * cols + seat.columnCharToIndex();
-    }
-
-    private static Seat indexToSeat(int idx, int cols) {
-        int row = (idx / cols) + 1;
-        int colIndex = idx % cols;
-        char col = Seat.indexToColumnChar(colIndex);
-        return new Seat(row, col);
-    }
-
-    private static BitSet constructSeatMap(int rows, int cols, List<Seat> takenSeats) {
-        var seatMap = new BitSet(rows * cols);
-        takenSeats.stream().mapToInt((seat) -> seatToIndex(seat, cols)).forEach(seatMap::set);
-        return seatMap;
-    }
-
-    private static int pickKthClearBit(BitSet taken, int totalSeats, int k) {
-        int index = taken.nextClearBit(0);
-        while (k > 0 && index >= 0 && index < totalSeats) {
-            index = taken.nextClearBit(index + 1);
-            k--;
-        }
-        return index;
-    }
-
     public int reserveRandomSeat(Integer flightId, String username) {
         var flight = flightRepository.findById(flightId).orElseThrow(() -> new InvalidArgumentException("Flight not found."));
         var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
@@ -88,13 +77,13 @@ public class TicketService {
         ticket.setUser(user);
         ticket.setTicketPrice(flight.getBaseFare());
 
-        var seatMap = constructSeatMap(rows, columns, takenSeats);
+        var seatMap = TicketHelper.constructSeatMap(rows, columns, takenSeats);
         var rng = new Random();
 
         while (remainingFreeSeats > 0) {
             int k = rng.nextInt(remainingFreeSeats);
-            int seatIndex = pickKthClearBit(seatMap, rows * columns, k);
-            Seat chosen = indexToSeat(seatIndex, columns);
+            int seatIndex = TicketHelper.pickKthClearBit(seatMap, rows * columns, k);
+            Seat chosen = TicketHelper.indexToSeat(seatIndex, columns);
             ticket.setSeat(chosen);
 
             try { return ticketRepository.save(ticket).getTicketId(); }
@@ -107,4 +96,52 @@ public class TicketService {
 
         throw new InvalidArgumentException("No free seats left.", "/search");
     }
+
+    @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
+    @Transactional(readOnly = true)
+    public TicketStaticDetailsDto getTicketDetails(Integer ticketId, String username) {
+        var ticket =  ticketRepository.findById(ticketId).orElseThrow(() -> new InvalidArgumentException("Ticket not found."));
+        return ticketMapper.toStaticDetailsDto(ticket);
+    }
+
+    @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
+    @Transactional
+    public void addAmenity(AmenityDto amenityDto, Integer ticketId, String username) {
+        var ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new InvalidArgumentException("Ticket not found."));
+        var amenity = new AmenitiesEntity();
+        var amenities = ticket.getAmenities();
+        amenities.forEach(am -> {
+            if (am.getAmenitiesId().getServiceId().equals(amenityDto.serviceId()))
+                throw new InvalidArgumentException("Amenity is already added.", "/tickets/" + ticketId);
+        });
+        amenity.setTicket(ticket);
+        amenity.setService(serviceRepository.findById(amenityDto.serviceId())
+                .orElseThrow(() -> new InvalidArgumentException("Service not found.")));
+        amenity.setQuantity(amenityDto.quantity());
+        amenity.setAmenitiesId(new AmenitiesIdentity(ticketId, amenityDto.serviceId()));
+        amenities.add(amenity);
+        ticketRepository.save(ticket);
+    }
+
+    @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
+    @Transactional
+    public void removeAmenity(Integer serviceId, Integer ticketId, String username) {
+
+        TicketEntity ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new InvalidArgumentException("Ticket not found.", "/home"));
+
+        AmenitiesEntity amenity = ticket.getAmenities().stream()
+                .filter(a -> a.getAmenitiesId() != null
+                        && a.getAmenitiesId().getServiceId().equals(serviceId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidArgumentException("Amenity not found.", "/tickets/" + ticketId));
+        ticket.getAmenities().remove(amenity);
+        amenity.setTicket(null);
+    }
+
+    @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
+    @Transactional
+    public void updateAmenity(Integer serviceId, Integer ticketId, Integer quantity, String username) {
+    }
+
 }

@@ -1,5 +1,6 @@
-package com.air.pujanke.model.dto;
+package com.air.pujanke.model.dto.airport;
 
+import com.air.pujanke.model.dto.CityDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

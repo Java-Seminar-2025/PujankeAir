@@ -1,8 +1,10 @@
 package com.air.pujanke.controller.user;
 
-import com.air.pujanke.model.custom.Seat;
 import com.air.pujanke.model.dto.SeatReservationDto;
+import com.air.pujanke.model.dto.amenity.AmenityDto;
+import com.air.pujanke.model.dto.ticket.TicketFinalizationDto;
 import com.air.pujanke.service.FlightService;
+import com.air.pujanke.service.ServiceService;
 import com.air.pujanke.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class TicketBookingController {
 
     private final FlightService flightService;
     private final TicketService ticketService;
+    private final ServiceService serviceService;
 
     @GetMapping("/flights/{flightId}")
     public String getSeatReservationPage(@PathVariable Integer flightId, Model model) {
@@ -41,6 +44,22 @@ public class TicketBookingController {
         var ticketId = ticketService.reserveRandomSeat(flightId, principal.getName());
         re.addFlashAttribute("success", "Successfully reserved seat.");
         return "redirect:/tickets/" +  ticketId;
+    }
+
+    @GetMapping("/tickets/{ticketId}")
+    public String getTicketFinalizationPage(@PathVariable Integer ticketId, Model model, Principal principal) {
+        model.addAttribute("finalizationForm", new TicketFinalizationDto(null, null));
+        model.addAttribute("ticketId", ticketId);
+        model.addAttribute("ticketDetails", ticketService.getTicketDetails(ticketId, principal.getName()));
+        model.addAttribute("services", serviceService.getAllServices());
+        model.addAttribute("amenityForm", new AmenityDto(null, null, null, null));
+        return "ticket_finalization";
+    }
+
+    @PatchMapping("/tickets/{ticketId}")
+    public String finalizeTicket(@PathVariable Integer ticketId, @ModelAttribute("finalizationForm") @Valid TicketFinalizationDto ticketFinalizeDto,
+                                 Principal principal) {
+        return "home"; // placeholder
     }
 
 }

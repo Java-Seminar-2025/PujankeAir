@@ -1,6 +1,6 @@
 package com.air.pujanke.repository.spec;
 
-import com.air.pujanke.model.dto.FlightSearchFormDto;
+import com.air.pujanke.model.dto.flight.FlightSearchFormDto;
 import com.air.pujanke.model.entity.FlightEntity;
 import com.air.pujanke.model.entity.TicketEntity;
 import org.springframework.data.jpa.domain.Specification;

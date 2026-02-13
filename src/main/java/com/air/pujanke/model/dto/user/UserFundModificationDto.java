@@ -1,4 +1,4 @@
-package com.air.pujanke.model.dto;
+package com.air.pujanke.model.dto.user;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;

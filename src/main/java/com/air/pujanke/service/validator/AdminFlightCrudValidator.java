@@ -1,7 +1,7 @@
 package com.air.pujanke.service.validator;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.FlightModificationDto;
+import com.air.pujanke.model.dto.flight.FlightModificationDto;
 import com.air.pujanke.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

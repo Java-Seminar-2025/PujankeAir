@@ -1,6 +1,6 @@
 package com.air.pujanke.controller.admin;
 
-import com.air.pujanke.model.dto.AirportModificationDto;
+import com.air.pujanke.model.dto.airport.AirportModificationDto;
 import com.air.pujanke.service.AirportService;
 import com.air.pujanke.service.CityService;
 import jakarta.validation.Valid;

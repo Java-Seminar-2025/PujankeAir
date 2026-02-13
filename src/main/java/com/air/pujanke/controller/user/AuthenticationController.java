@@ -1,6 +1,6 @@
 package com.air.pujanke.controller.user;
 
-import com.air.pujanke.model.dto.UserRegistrationDto;
+import com.air.pujanke.model.dto.user.UserRegistrationDto;
 import com.air.pujanke.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

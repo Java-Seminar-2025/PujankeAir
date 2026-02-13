@@ -1,7 +1,7 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.*;
+import com.air.pujanke.model.dto.user.*;
 import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
 import com.air.pujanke.service.validator.UserAccountOperationValidator;

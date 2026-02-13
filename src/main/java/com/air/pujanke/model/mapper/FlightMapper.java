@@ -1,8 +1,8 @@
 package com.air.pujanke.model.mapper;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.FlightModificationDto;
-import com.air.pujanke.model.dto.FlightSearchResultDto;
+import com.air.pujanke.model.dto.flight.FlightModificationDto;
+import com.air.pujanke.model.dto.flight.FlightSearchResultDto;
 import com.air.pujanke.model.entity.FlightEntity;
 import com.air.pujanke.repository.AircraftRepository;
 import com.air.pujanke.repository.AirportRepository;

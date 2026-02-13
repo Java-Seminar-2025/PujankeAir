@@ -2,9 +2,7 @@ package com.air.pujanke.model.entity;
 
 import com.air.pujanke.model.custom.AmenitiesIdentity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +14,9 @@ public class AmenitiesEntity {
     @EmbeddedId
     private AmenitiesIdentity amenitiesId;
 
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @MapsId("ticketId")
     @JoinColumn(name = "ticket_id", nullable = false)

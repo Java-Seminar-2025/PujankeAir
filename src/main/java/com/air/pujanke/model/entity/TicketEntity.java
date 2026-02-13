@@ -3,12 +3,12 @@ package com.air.pujanke.model.entity;
 import com.air.pujanke.model.custom.Seat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -53,4 +53,9 @@ public class TicketEntity {
 
     @Column(name = "generation_timestamp", insertable = false, updatable = false, nullable = false)
     private Instant generationTimestamp;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "ticket", fetch = FetchType.EAGER)
+    private Set<AmenitiesEntity> amenities = new HashSet<>();
 }

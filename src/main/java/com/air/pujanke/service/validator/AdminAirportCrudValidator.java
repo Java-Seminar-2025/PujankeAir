@@ -1,7 +1,7 @@
 package com.air.pujanke.service.validator;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.AirportModificationDto;
+import com.air.pujanke.model.dto.airport.AirportModificationDto;
 import com.air.pujanke.repository.AirportRepository;
 import com.air.pujanke.repository.CityRepository;
 import jakarta.validation.constraints.NotBlank;

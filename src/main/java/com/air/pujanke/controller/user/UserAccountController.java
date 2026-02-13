@@ -1,8 +1,8 @@
 package com.air.pujanke.controller.user;
 
-import com.air.pujanke.model.dto.UserAccountDeletionDto;
-import com.air.pujanke.model.dto.UserFundModificationDto;
-import com.air.pujanke.model.dto.UserPasswordResetDto;
+import com.air.pujanke.model.dto.user.UserAccountDeletionDto;
+import com.air.pujanke.model.dto.user.UserFundModificationDto;
+import com.air.pujanke.model.dto.user.UserPasswordResetDto;
 import com.air.pujanke.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

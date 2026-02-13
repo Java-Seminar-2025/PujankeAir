@@ -1,6 +1,6 @@
 package com.air.pujanke.controller.pub;
 
-import com.air.pujanke.model.dto.FlightSearchFormDto;
+import com.air.pujanke.model.dto.flight.FlightSearchFormDto;
 import com.air.pujanke.service.AirportService;
 import com.air.pujanke.service.FlightService;
 import jakarta.validation.Valid;

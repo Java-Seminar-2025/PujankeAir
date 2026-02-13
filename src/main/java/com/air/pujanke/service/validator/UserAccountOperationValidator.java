@@ -1,10 +1,10 @@
 package com.air.pujanke.service.validator;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.dto.UserAccountDeletionDto;
-import com.air.pujanke.model.dto.UserFundModificationDto;
-import com.air.pujanke.model.dto.UserPasswordResetDto;
-import com.air.pujanke.model.dto.UserRegistrationDto;
+import com.air.pujanke.model.dto.user.UserAccountDeletionDto;
+import com.air.pujanke.model.dto.user.UserFundModificationDto;
+import com.air.pujanke.model.dto.user.UserPasswordResetDto;
+import com.air.pujanke.model.dto.user.UserRegistrationDto;
 import com.air.pujanke.model.entity.UserEntity;
 import com.air.pujanke.repository.UserRepository;
 import lombok.NonNull;

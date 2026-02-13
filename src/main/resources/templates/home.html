@@ -12,6 +12,7 @@
 </head>
 <body>
 <th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+<th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
 
 <div th:if="${param.unauthorized}" class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error:</strong> You don't have permission to visit this web location.

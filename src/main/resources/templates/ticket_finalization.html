@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>PujankeAir - ticket finalization</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/text_style.css}" rel="stylesheet">
+</head>
+
+<body>
+<th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
+<th:block th:replace="~{fragments/error_message :: error_message}"></th:block>
+<th:block th:replace="~{fragments/success_message :: success_message}"></th:block>
+
+
+<div class="container my-5">
+
+    <div class="row g-4">
+         
+        <div class="col-12 col-lg-7">
+
+             
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Ticket details</h2>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Origin</div>
+                            <div class="fw-semibold" th:text="${ticketDetails.originAirport().airportName()}">Origin Airport</div>
+                            <div class="text-muted">
+                                <span th:text="${ticketDetails.originAirport().icaoCode()}">ICAO</span>
+                                <span class="mx-1">•</span>
+                                <span th:text="${ticketDetails.originAirport().city().cityName()}">City</span>,
+                                <span th:text="${ticketDetails.originAirport().city().countryName()}">Country</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Destination</div>
+                            <div class="fw-semibold" th:text="${ticketDetails.destinationAirport().airportName()}">Destination Airport</div>
+                            <div class="text-muted">
+                                <span th:text="${ticketDetails.destinationAirport().icaoCode()}">ICAO</span>
+                                <span class="mx-1">•</span>
+                                <span th:text="${ticketDetails.destinationAirport().city().cityName()}">City</span>,
+                                <span th:text="${ticketDetails.destinationAirport().city().countryName()}">Country</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Takeoff</div>
+                            <div class="fw-semibold">
+                                <span th:text="${#temporals.format(ticketDetails.takeoffDate, 'dd.MM.yyyy.')}">None</span>
+                                <span class="mx-1">•</span>
+                                <span th:text="${ticketDetails.takeoffTime()}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Seat</div>
+                            <div class="fw-semibold" th:text="${ticketDetails.assignedSeat()}">None</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4"/>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="small text-muted">Base ticket price</div>
+                            <div class="fw-semibold" th:text="${ticketDetails.ticketPrice()}">0.00</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="small text-muted">Amenities price</div>
+                            <div class="fw-semibold" th:text="${ticketDetails.amenitiesPrice()}">0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 p-3 rounded-3 bg-light d-flex justify-content-between align-items-center">
+                        <div class="fw-semibold">Total</div>
+                        <div class="fw-bold"
+                             th:text="${ticketDetails.ticketPrice().add(ticketDetails.amenitiesPrice())}">
+                            0.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             
+            <div class="card shadow-sm rounded-4 mt-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                        <h3 class="h5 mb-0">Amenities</h3>
+
+
+                        <form class="row g-2 align-items-end"
+                              method="post"
+                              th:action="@{/tickets/{ticketId}/amenity(ticketId=${ticketId})}"
+                              th:object="${amenityForm}">
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small text-muted mb-1">Service</label>
+                                <select class="form-select form-select-sm" th:field="*{serviceId}" required>
+                                    <option value="" selected disabled>Select a service...</option>
+                                    <option th:each="s : ${services}"
+                                            th:value="${s.serviceId()}"
+                                            th:text="${s.serviceName() + ' (' + s.serviceFee() + ')'}">
+                                    </option>
+                                </select>
+                                <div class="text-danger small mt-1" th:errors="*{serviceId}"></div>
+                            </div>
+
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small text-muted mb-1">Quantity</label>
+                                <input class="form-control form-control-sm"
+                                       type="number"
+                                       min="1"
+                                       th:field="*{quantity}"
+                                       required
+                                       placeholder="Qty">
+                                <div class="text-danger small mt-1" th:errors="*{quantity}"></div>
+                            </div>
+
+                            <div class="col-6 col-md-3 d-grid">
+                                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(ticketDetails.amenities())}" class="text-muted">
+                        No amenities added.
+                    </div>
+
+                    <div class="list-group" th:if="${!#lists.isEmpty(ticketDetails.amenities())}">
+                        <div class="list-group-item py-3"
+                             th:each="amenity : ${ticketDetails.amenities()}">
+
+                            <div class="row g-3 align-items-end">
+                                 
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label small text-muted mb-1">Service</label>
+                                    <input class="form-control" type="text" th:value="${amenity.serviceName()}" readonly>
+                                </div>
+
+
+                                <div class="col-6 col-md-2">
+                                    <label class="form-label small text-muted mb-1">Fee</label>
+                                    <input class="form-control" type="text" th:value="${amenity.serviceFee()}" readonly>
+                                </div>
+
+                                 
+                                <div class="col-12 col-md-4">
+                                    <div class="d-flex gap-2 align-items-end">
+
+                                         
+                                        <form class="d-flex gap-2 flex-grow-1"
+                                              method="post"
+                                              th:action="@{/tickets/{ticketId}/amenity/{serviceId}(ticketId=${ticketId}, serviceId=${amenity.serviceId()})}">
+                                            <input type="hidden" name="_method" value="patch"/>
+
+                                            <div class="flex-grow-1">
+                                                <label class="form-label small text-muted mb-1">Quantity</label>
+                                                <input class="form-control" type="number" name="quantity" min="1" required
+                                                       th:value="${amenity.quantity()}">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-outline-primary mt-auto">
+                                                Update
+                                            </button>
+                                        </form>
+
+                                         
+                                        <form method="post"
+                                              th:action="@{/tickets/{ticketId}/amenity/{serviceId}(ticketId=${ticketId}, serviceId=${amenity.serviceId()})}">
+                                            <input type="hidden" name="_method" value="delete"/>
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="small text-muted mt-3">
+                        Updates/deletions apply immediately. Finalization uses the current database state.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Finalize purchase</h2>
+
+                    <form method="post"
+                          th:action="@{/tickets/{ticketId}(ticketId=${ticketId})}"
+                          th:object="${finalizationForm}">
+                        <input type="hidden" name="_method" value="patch"/>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="fullName">Full name</label>
+                            <input class="form-control" id="fullName" type="text"
+                                   th:field="*{fullName}" required
+                                   placeholder="e.g. John Doe">
+                            <div class="text-danger small mt-1" th:errors="*{fullName}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="pin">Personal identification number (11 digits)</label>
+                            <input class="form-control" id="pin" type="text"
+                                   th:field="*{pin}" required
+                                   inputmode="numeric" pattern="\\d{11}" maxlength="11"
+                                   placeholder="11 digits">
+                            <div class="text-danger small mt-1" th:errors="*{pin}"></div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Complete purchase
+                            </button>
+
+                            <a class="btn btn-outline-secondary" th:href="@{/home}">
+                                Finish later
+                            </a>
+                        </div>
+                    </form>
+
+                    <div class="small text-muted mt-3">
+                        Provide your full name and 11-digit PIN to complete the purchase.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

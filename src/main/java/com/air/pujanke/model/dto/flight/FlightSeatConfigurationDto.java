@@ -1,4 +1,4 @@
-package com.air.pujanke.model.dto;
+package com.air.pujanke.model.dto.flight;
 
 import com.air.pujanke.model.custom.Seat;
 

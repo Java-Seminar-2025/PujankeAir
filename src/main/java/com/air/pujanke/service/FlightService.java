@@ -1,8 +1,7 @@
 package com.air.pujanke.service;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
-import com.air.pujanke.model.custom.Seat;
-import com.air.pujanke.model.dto.*;
+import com.air.pujanke.model.dto.flight.*;
 import com.air.pujanke.model.entity.FlightEntity;
 import com.air.pujanke.model.entity.TicketEntity;
 import com.air.pujanke.model.mapper.FlightMapper;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -51,7 +49,7 @@ public class FlightService {
         return customMapper.toFlightModificationDto(flight);
     }
 
-    public Page<FlightSearchResultDto> getFilteredSearchResults(FlightSearchFormDto  searchForm, Pageable pageable) {
+    public Page<FlightSearchResultDto> getFilteredSearchResults(FlightSearchFormDto searchForm, Pageable pageable) {
 
         return flightRepository.findAll(FlightSpecification.fromDto(searchForm), pageable)
                 .map(customMapper::toFlightSearchResultDto);

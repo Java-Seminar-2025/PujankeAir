@@ -1,4 +1,4 @@
-package com.air.pujanke.model.dto;
+package com.air.pujanke.model.dto.user;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;

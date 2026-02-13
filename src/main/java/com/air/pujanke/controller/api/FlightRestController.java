@@ -1,6 +1,6 @@
 package com.air.pujanke.controller.api;
 
-import com.air.pujanke.model.dto.FlightSeatConfigurationDto;
+import com.air.pujanke.model.dto.flight.FlightSeatConfigurationDto;
 import com.air.pujanke.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

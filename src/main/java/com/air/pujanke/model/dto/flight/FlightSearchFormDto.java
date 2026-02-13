@@ -1,4 +1,4 @@
-package com.air.pujanke.model.dto;
+package com.air.pujanke.model.dto.flight;
 
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
