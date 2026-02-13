@@ -24,6 +24,6 @@ public class AdminFlightCrudValidator {
     public void validateFlightDeletion(Integer flightId) {
         if (ticketRepository.existsByFlight(flightRepository.findById(flightId)
                 .orElseThrow(() -> new  InvalidArgumentException("Flight doesn't exist."))))
-            throw new InvalidArgumentException("Can't delete a flight that has tickets associated with it.");
+            throw new InvalidArgumentException("Can't delete a flight that has tickets associated with it.", "/admin/flights");
     }
 }

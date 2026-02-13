@@ -54,11 +54,11 @@ public class FlightMapper {
 
         var destinationIcao = destinationAirportPresent ?  entity.getDestinationAirport().getIcaoCode() : null;
         var destinationName = destinationAirportPresent ? entity.getDestinationAirport().getAirportName() : null;
-        var destinationCity =  destinationAirportPresent ?  entity.getDestinationAirport().getCity().getCityName() : null;
+        var destinationCity =  destinationAirportCityPresent ?  entity.getDestinationAirport().getCity().getCityName() : null;
 
         var originIcao = originAirportPresent ? entity.getTakeoffAirport().getIcaoCode() : null;
         var originName =  originAirportPresent ? entity.getTakeoffAirport().getAirportName() : null;
-        var originCity =  originAirportPresent ? entity.getTakeoffAirport().getCity().getCityName() : null;
+        var originCity =  originAirportCityPresent ? entity.getTakeoffAirport().getCity().getCityName() : null;
 
         return new FlightSearchResultDto(entity.getFlightId(), entity.getTakeoffDate(), entity.getTakeoffTime(),
                 originName, originIcao, originCity, destinationName, destinationIcao, destinationCity, entity.getBaseFare());

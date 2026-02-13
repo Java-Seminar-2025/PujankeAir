@@ -2,6 +2,7 @@ package com.air.pujanke.repository.spec;
 
 import com.air.pujanke.model.dto.FlightSearchFormDto;
 import com.air.pujanke.model.entity.FlightEntity;
+import com.air.pujanke.model.entity.TicketEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -58,6 +59,22 @@ public class FlightSpecification {
         return (root, query, cb) -> cb.and(cb.isNotNull(root.get("takeoffAirport")), cb.isNotNull(root.get("destinationAirport")));
     }
 
+    public static Specification<FlightEntity> isNotOverbooked() {
+        return (root, query, cb) -> {
+            var capacity = cb.prod(
+                    root.get("aircraft").get("seatRowCount"),
+                    root.get("aircraft").get("seatColumnCount")
+            ).as(Long.class);
+
+            var sq = query.subquery(Long.class);
+            var t = sq.from(TicketEntity.class);
+            sq.select(cb.count(t));
+            sq.where(cb.equal(t.get("flight"), root));
+
+            return cb.greaterThan(capacity, sq);
+        };
+    }
+
 
     public static Specification<FlightEntity> fromDto(FlightSearchFormDto dto) {
         return Specification
@@ -66,6 +83,7 @@ public class FlightSpecification {
                 .and(takeoffDateEquals(dto.takeoffDate()))
                 .and(baseFareLessThanOrEqual(dto.baseFareLesserThan()))
                 .and(notExpired())
-                .and(airportsNotNull());
+                .and(airportsNotNull())
+                .and(isNotOverbooked());
     }
 }

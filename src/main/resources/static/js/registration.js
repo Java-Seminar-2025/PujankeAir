@@ -5,7 +5,7 @@ usernameInput.addEventListener('blur', async function() {
     if (!username) return;
 
     try {
-        const response = await fetch(`/api/user/check-username?username=${encodeURIComponent(username)}`);
+        const response = await fetch(`/api/public/user/check-username?username=${encodeURIComponent(username)}`);
         const exists = await response.json();
 
         if (exists) {

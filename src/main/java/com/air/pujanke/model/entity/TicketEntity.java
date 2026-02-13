@@ -31,20 +31,24 @@ public class TicketEntity {
     @JoinColumn(name = "flight_id", nullable = false)
     private FlightEntity flight;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Embedded
     @NotNull
     private Seat seat;
 
-    @Column(name = "ticket_holder_fullname", length = 40, nullable = false)
+    @Column(name = "ticket_holder_fullname", length = 40)
     private String ticketHolderFullName;
 
-    @Column(name = "ticket_holder_pin", length = 11, nullable = false)
+    @Column(name = "ticket_holder_pin", length = 11)
     private String tickerHolderPin;
 
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal ticketPrice;
 
-    @Column(name = "reservation_complete", insertable = false, updatable = false, nullable = false)
+    @Column(name = "reservation_complete", nullable = false)
     private Boolean isReservationComplete;
 
     @Column(name = "generation_timestamp", insertable = false, updatable = false, nullable = false)

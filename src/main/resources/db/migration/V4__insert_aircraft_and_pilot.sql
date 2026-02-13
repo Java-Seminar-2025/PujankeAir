@@ -6,7 +6,8 @@ VALUES
 ('Boeing', '747', 'BA25S6', 12, 4),
 ('Airbus',  'A320', 'AAA2567', 20, 6),
 ('Lockheed Martin', 'LM5654', 'AAAAAA', 10, 10),
-('Antonov', 'AN225', 'BCDTSSZT', 5, 8);
+('Antonov', 'AN225', 'BCDTSSZT', 5, 8),
+('Aas', 'AAB', 'ASVSAFG', 5, 3);
 
 
 INSERT INTO `Pilot`

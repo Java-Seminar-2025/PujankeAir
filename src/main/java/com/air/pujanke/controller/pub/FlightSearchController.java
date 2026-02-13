@@ -1,4 +1,4 @@
-package com.air.pujanke.controller.user;
+package com.air.pujanke.controller.pub;
 
 import com.air.pujanke.model.dto.FlightSearchFormDto;
 import com.air.pujanke.service.AirportService;
@@ -35,6 +35,3 @@ public class FlightSearchController {
         return "search";
     }
 }
-
-
-// TODO: Fix sorting by time in the search form.

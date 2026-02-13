@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidArgumentException.class)
     public String handleInvalidArgumentException(InvalidArgumentException ex, RedirectAttributes ra, HttpServletRequest request) {
         ra.addFlashAttribute("error", ex.getMessage());
-        return "redirect:" + request.getRequestURI();
+        return "redirect:" + (ex.getRedirect() == null ? request.getRequestURI() : ex.getRedirect());
     }
 
     @ExceptionHandler(RuntimeException.class)

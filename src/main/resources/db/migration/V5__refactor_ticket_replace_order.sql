@@ -5,9 +5,10 @@
 USE PujankeAir;
 
 ALTER TABLE Ticket
-CHANGE COLUMN seat_number seat_row INT,
-ADD COLUMN seat_column CHAR(1) CHECK (REGEXP_LIKE(seat_column, '[A-Z]')),
+CHANGE COLUMN seat_number seat_row INT CHECK (seat_row > 0) NOT NULL,
+ADD COLUMN seat_column CHAR(1) CHECK (REGEXP_LIKE(seat_column, '[A-Z]')) NOT NULL,
 DROP INDEX seat_pick_unique,
+DROP COLUMN `order_id`,
 DROP FOREIGN KEY fk_ticket_order,
 ADD CONSTRAINT seat_pick_unique UNIQUE(flight_id, seat_row, seat_column),
 ADD COLUMN `user_id` INT,

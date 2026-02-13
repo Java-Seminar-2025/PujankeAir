@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**", "/admin").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/register", "/login").permitAll()
                 .requestMatchers("/home", "/about-us", "/search", "/search/**").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/api/**", "/img/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/api/public/**", "/img/**").permitAll()
                 .anyRequest().authenticated()
         ).formLogin((httpSec) -> httpSec
                 .loginPage("/login")

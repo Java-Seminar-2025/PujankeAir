@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Aircraft (
 	seat_columns INT NOT NULL,
 	
 	CONSTRAINT chk_pos_counts
-	CHECK(seat_rows > 0 AND seat_columns > 0)
+	CHECK(seat_rows > 0 AND seat_columns > 0 AND seat_columns <= 26)
 );
 
 CREATE TABLE IF NOT EXISTS Service (
@@ -113,8 +113,8 @@ CREATE TABLE IF NOT EXISTS Ticket (
 	ticket_id INT AUTO_INCREMENT PRIMARY KEY,
 	flight_id INT NOT NULL,
 	seat_number VARCHAR(5) NOT NULL,
-	ticket_holder_fullname VARCHAR(40) NOT NULL,
-	ticket_holder_pin VARCHAR(11) NOT NULL,
+	ticket_holder_fullname VARCHAR(40),
+	ticket_holder_pin VARCHAR(11),
 	price DECIMAL(10,2) NOT NULL,
 	reservation_complete BOOL DEFAULT FALSE,
 	generation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

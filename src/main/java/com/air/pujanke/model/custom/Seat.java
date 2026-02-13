@@ -19,4 +19,22 @@ public class Seat implements Serializable {
 
     @Column(name = "seat_column", nullable = false)
     private Character seatColumn;
+
+
+    @Override
+    public String toString() {
+        return String.format("%d%c", seatRow, seatColumn);
+    }
+
+    public static Seat fromString(String seat) {
+        return new Seat(Integer.parseInt(seat.substring(0, seat.length() - 1)), Character.toUpperCase(seat.charAt(seat.length() - 1)));
+    }
+
+    public int columnCharToIndex() {
+        return seatColumn - 'A';
+    }
+
+    public static char indexToColumnChar(int index) {
+        return (char)(index + 'A');
+    }
 }

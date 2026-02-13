@@ -1,0 +1,77 @@
+.seatmap-wrap {
+    overflow-x: auto;
+}
+
+.seatmap-table {
+    border-collapse: separate;
+    border-spacing: 0.4rem;
+    margin: 0 auto;
+}
+
+.seatmap-rowhdr {
+    padding-right: 0.5rem;
+    white-space: nowrap;
+}
+
+.seatmap-colhdr {
+    width: 42px;
+    min-width: 42px;
+}
+
+.seatmap-aisle {
+    width: 24px;
+    min-width: 24px;
+}
+
+.seatmap-seat {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 0.6rem;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.seatmap-seat-free {
+    background-color: #2f2f2f;
+    color: #f1f1f1;
+}
+
+.seatmap-seat-free:hover {
+    background-color: #ffd500;
+    color: #1a1a1a;
+    transform: translateY(-1px);
+}
+
+.seatmap-seat-reserved {
+    background-color: #b3261e;
+    color: #ffffff;
+    cursor: not-allowed;
+    opacity: 0.95;
+}
+
+.seatmap-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.seatmap-legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.seatmap-legend-free {
+    background-color: #2f2f2f;
+}
+
+.seatmap-legend-reserved {
+    background-color: #b3261e;
+}
