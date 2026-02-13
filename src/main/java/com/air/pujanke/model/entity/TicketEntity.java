@@ -43,7 +43,7 @@ public class TicketEntity {
     private String ticketHolderFullName;
 
     @Column(name = "ticket_holder_pin", length = 11)
-    private String tickerHolderPin;
+    private String ticketHolderPin;
 
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal ticketPrice;

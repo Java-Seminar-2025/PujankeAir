@@ -57,9 +57,13 @@ public class TicketBookingController {
     }
 
     @PatchMapping("/tickets/{ticketId}")
-    public String finalizeTicket(@PathVariable Integer ticketId, @ModelAttribute("finalizationForm") @Valid TicketFinalizationDto ticketFinalizeDto,
-                                 Principal principal) {
-        return "home"; // placeholder
+    public String finalizeTicket(@PathVariable Integer ticketId,
+                                 @ModelAttribute("finalizationForm") @Valid TicketFinalizationDto ticketFinalizeDto,
+                                 Principal principal,
+                                 RedirectAttributes ra) {
+        ticketService.finalizeTicket(ticketId, principal.getName(), ticketFinalizeDto);
+        ra.addFlashAttribute("success", "Successfully finalized ticket.");
+        return "redirect:/home";
     }
 
 }

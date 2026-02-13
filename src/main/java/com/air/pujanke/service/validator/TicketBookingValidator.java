@@ -2,8 +2,10 @@ package com.air.pujanke.service.validator;
 
 import com.air.pujanke.exception.exceptiontype.InvalidArgumentException;
 import com.air.pujanke.model.custom.Seat;
+import com.air.pujanke.model.dto.ticket.TicketFinalizationDto;
 import com.air.pujanke.model.entity.AircraftEntity;
 import com.air.pujanke.model.entity.FlightEntity;
+import com.air.pujanke.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class TicketBookingValidator {
+
+    private final TicketRepository ticketRepository;
 
     public void validateSelectedReservation(AircraftEntity aircraft, Seat seat) {
         if (aircraft == null)

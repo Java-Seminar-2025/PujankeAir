@@ -191,9 +191,6 @@
                         </div>
                     </div>
 
-                    <div class="small text-muted mt-3">
-                        Updates/deletions apply immediately. Finalization uses the current database state.
-                    </div>
                 </div>
             </div>
         </div>
@@ -221,7 +218,7 @@
                             <label class="form-label" for="pin">Personal identification number (11 digits)</label>
                             <input class="form-control" id="pin" type="text"
                                    th:field="*{pin}" required
-                                   inputmode="numeric" pattern="\\d{11}" maxlength="11"
+                                   inputmode="numeric" pattern="[0-9]{11}" maxlength="11"
                                    placeholder="11 digits">
                             <div class="text-danger small mt-1" th:errors="*{pin}"></div>
                         </div>

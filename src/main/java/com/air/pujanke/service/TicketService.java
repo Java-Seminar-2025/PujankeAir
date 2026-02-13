@@ -5,7 +5,9 @@ import com.air.pujanke.model.custom.AmenitiesIdentity;
 import com.air.pujanke.model.custom.Seat;
 import com.air.pujanke.model.dto.*;
 import com.air.pujanke.model.dto.amenity.AmenityDto;
+import com.air.pujanke.model.dto.ticket.TicketFinalizationDto;
 import com.air.pujanke.model.dto.ticket.TicketStaticDetailsDto;
+import com.air.pujanke.model.dto.user.UserFundModificationDto;
 import com.air.pujanke.model.entity.AmenitiesEntity;
 import com.air.pujanke.model.entity.TicketEntity;
 import com.air.pujanke.model.mapper.TicketMapper;
@@ -38,7 +40,7 @@ public class TicketService {
     private final UserRepository userRepository;
     private final TicketBookingValidator validator;
     private final TicketSecurity ticketSecurity;
-    private final ObjectMapper objectMapper;
+    private final UserService userService;
     private final TicketMapper ticketMapper;
     private final ServiceRepository serviceRepository;
 
@@ -142,6 +144,26 @@ public class TicketService {
     @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
     @Transactional
     public void updateAmenity(Integer serviceId, Integer ticketId, Integer quantity, String username) {
+    }
+
+    @PreAuthorize("@ticketSecurity.isTicketOwner(#ticketId, #username)")
+    @Transactional
+    public void finalizeTicket(Integer ticketId, String username, TicketFinalizationDto ticketDto) {
+        var ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new InvalidArgumentException("Ticket not found."));
+        ticket.setTicketHolderFullName(ticketDto.fullName());
+        ticket.setTicketHolderPin(ticketDto.pin());
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidArgumentException("User not found."));
+        var amenities = ticket.getAmenities();
+        var price = amenities.stream()
+                .map(a -> a.getService().getServiceFee().multiply(BigDecimal.valueOf(a.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (user.getFunds().compareTo(price) < 0) {
+            throw new InvalidArgumentException("Price not enough for service.", "/tickets/" + ticketId);
+        }
+
+        userService.modifyUserFunds(username,
+                new UserFundModificationDto(price.add(ticket.getTicketPrice()), false));
+        ticketRepository.save(ticket);
     }
 
 }
